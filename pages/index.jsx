@@ -8,10 +8,27 @@ const GroceryPage = () => {
   const [itemsList, setItemsList] = useState([]);
 
   const addGroceryItem = (item) => {
-    const updatedGroceryItems = [
-      ...itemsList,
-      item
-    ];
+    const itemExists = itemsList.some((it) => it.id === item.id);
+    let updatedGroceryItems = [];
+    if (itemExists) {
+      updatedGroceryItems = itemsList.map((it) => {
+        if (it.id === item.id) {
+          const newQty = it.quantity + 1;
+          const obj = {
+            ...it,
+            quantity: newQty,
+            totalPrice: newQty * parseFloat(it.price)
+          };
+          return obj;
+        }
+        return it;
+      });
+    } else {
+      updatedGroceryItems = [
+        ...itemsList,
+        item
+      ];
+    }
     setItemsList(updatedGroceryItems);
   };
 
@@ -19,7 +36,6 @@ const GroceryPage = () => {
     const items = itemsList.map((item) => {
       if (item.id in qtys) {
         const quantities = parseFloat(qtys[item.id]);
-        console.log(quantities);
         const updatedItem = {
           ...item,
           quantity: quantities,
@@ -38,7 +54,7 @@ const GroceryPage = () => {
   };
 
   const getGroceryList = (it) => (
-    <div className="grid grid-cols-3 gap-5">
+    <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-5">
       {groceries[it].map((item) => (
         <GroceryItem item={item} onChange={addGroceryItem} />
       ))}
@@ -47,7 +63,7 @@ const GroceryPage = () => {
 
   return (
     <div className="flex justify-center items-center w-full">
-      <div className="flex p-10">
+      <div className="flex p-10 w-full">
         <div className="space-y-5 w-2/3">
           {
             Object.keys(groceries).map((category) => (
@@ -59,12 +75,18 @@ const GroceryPage = () => {
 
           }
         </div>
-        <div className="w-1/3 px-10 space-y-5">
-          <div className="text-3xl font-bold">All ready? chekout</div>
-          <Panel bordered className="overflow-auto h-[25rem]">
-            <div className="font-bold text-2xl">Your shopping cart</div>
-            <GroceryCart products={itemsList} onChange={updateQuantities} onDelete={onDeleteItem} />
-          </Panel>
+        <div className="px-10 space-y-5 w-[30rem]">
+          <div className="sticky top-10 space-y-5 w-full">
+            <div className="text-3xl font-bold">All ready? checkout</div>
+            <Panel bordered className="overflow-auto h-[25rem]">
+              <div className="font-bold text-2xl">Your shopping cart</div>
+              <GroceryCart
+                products={itemsList}
+                onChange={updateQuantities}
+                onDelete={onDeleteItem}
+              />
+            </Panel>
+          </div>
         </div>
       </div>
     </div>
