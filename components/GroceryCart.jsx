@@ -7,6 +7,23 @@ const GroceryCart = ({ products, onChange, onDelete }) => {
   const [quantities, setQuantities] = useState({ ...products });
   const [subTotal, setSubTotal] = useState(0);
 
+  useEffect(() => {
+    const newSubtotal = products.map(
+      (item) => item.totalPrice
+    ).reduce((prev, current) => prev + current, 0);
+    setSubTotal(newSubtotal);
+  }, [products]);
+
+  useEffect(() => {
+    if (products.length) {
+      const updatedQuantities = { ...quantities };
+      products.forEach((item) => {
+        updatedQuantities[item.id] = item.quantity;
+      });
+      setQuantities(updatedQuantities);
+    }
+  }, [products]);
+
   const onChangeQuantity = (value, id) => {
     const updatedQuantities = { ...quantities };
 
@@ -15,14 +32,10 @@ const GroceryCart = ({ products, onChange, onDelete }) => {
     onChange(updatedQuantities);
   };
 
-  console.log(products);
-
-  useEffect(() => {
-    const newSubtotal = products.map(
-      (item) => item.totalPrice
-    ).reduce((prev, current) => prev + current, 0);
-    setSubTotal(newSubtotal);
-  });
+  const handleDelete = (id) => {
+    delete quantities[id];
+    onDelete(id);
+  };
 
   return (
     <div className="space-y-10">
@@ -30,7 +43,7 @@ const GroceryCart = ({ products, onChange, onDelete }) => {
         {products.map((item) => (
           <div className="flex justify-between items-center">
             <InputNumber
-              min={0}
+              min={1}
               value={quantities[item.id] || 1}
               onChange={(val) => onChangeQuantity(val, item.id)}
               className="w-14"
@@ -41,7 +54,7 @@ const GroceryCart = ({ products, onChange, onDelete }) => {
                 $
                 {item.price}
               </div>
-              <WarningRound className="text-red-500" onClick={() => onDelete(item.id)} />
+              <WarningRound className="text-red-500" onClick={() => handleDelete(item.id)} />
             </div>
           </div>
         ))}

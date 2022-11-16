@@ -12,17 +12,18 @@ const GroceryItem = ({ item, onChange }) => {
   const handleAddGroceryItem = (it) => {
     const itemWithQuantity = {
       ...it,
-      quantity: 1
+      quantity: 1,
+      totalPrice: parseFloat(it.price)
     };
     onChange(itemWithQuantity);
   };
 
   return (
-    <Panel bordered className="bg-white w-full">
+    <Panel bordered className="bg-white w-full h-[8rem]">
       <div className="flex space-x-8">
         <div className="flex w-3/4 space-x-2">
           <div>
-            <img src={img} alt="food" className="w-24" />
+            <img src={img} alt="food" className="w-24 h-16 object-cover" />
           </div>
           <div>
             {name}
@@ -34,6 +35,7 @@ const GroceryItem = ({ item, onChange }) => {
         </div>
         <div className="flex flex-col justify-between">
           <div className="flex justify-end">
+            $
             {price}
           </div>
           <PlusRound
