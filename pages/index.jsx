@@ -15,7 +15,27 @@ const GroceryPage = () => {
     setItemsList(updatedGroceryItems);
   };
 
-  console.log(itemsList);
+  const updateQuantities = (qtys) => {
+    const items = itemsList.map((item) => {
+      if (item.id in qtys) {
+        const quantities = parseFloat(qtys[item.id]);
+        console.log(quantities);
+        const updatedItem = {
+          ...item,
+          quantity: quantities,
+          totalPrice: parseFloat(item.price) * quantities
+        };
+        return updatedItem;
+      }
+      return item;
+    });
+    setItemsList(items);
+  };
+
+  const onDeleteItem = (id) => {
+    const updatedList = itemsList.filter((item) => item.id !== id);
+    setItemsList(updatedList);
+  };
 
   const getGroceryList = (it) => (
     <div className="grid grid-cols-3 gap-5">
@@ -41,8 +61,9 @@ const GroceryPage = () => {
         </div>
         <div className="w-1/3 px-10 space-y-5">
           <div className="text-3xl font-bold">All ready? chekout</div>
-          <Panel header="Your cart" bordered>
-            <GroceryCart items={itemsList} />
+          <Panel bordered className="overflow-auto h-[25rem]">
+            <div className="font-bold text-2xl">Your shopping cart</div>
+            <GroceryCart products={itemsList} onChange={updateQuantities} onDelete={onDeleteItem} />
           </Panel>
         </div>
       </div>
