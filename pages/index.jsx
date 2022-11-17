@@ -48,9 +48,13 @@ const GroceryPage = () => {
     setItemsList(items);
   };
 
-  const onDeleteItem = (id) => {
-    const updatedList = itemsList.filter((item) => item.id !== id);
-    setItemsList(updatedList);
+  const handleDeleteItems = (del) => {
+    if (del === "All") {
+      setItemsList([]);
+    } else {
+      const updatedList = itemsList.filter((item) => item.id !== del);
+      setItemsList(updatedList);
+    }
   };
 
   const getGroceryList = (it) => (
@@ -62,28 +66,45 @@ const GroceryPage = () => {
   );
 
   return (
-    <div className="flex justify-center items-center w-full">
-      <div className="flex p-10 w-full">
+    <div className="flex flex-col justify-center items-center w-screen">
+      <div className="w-full">
+        <img
+          className=" w-full opacity-60 h-[28rem] object-cover"
+          src="https://static.blog.bolt.eu/LIVE/wp-content/uploads/2022/04/30135418/grocery-list.jpg"
+          alt="food-bg"
+        />
+        <div
+          className="bg-white outline outline-2 text-5xl absolute top-1/4 left-2/4 text-black -translate-x-1/2 -translate-y-1/2"
+        >
+          Local grocery store
+        </div>
+        <div
+          className="bg-white outline outline-2 text-3xl text-black absolute top-1/3 left-2/4 -translate-x-1/2 -translate-y-1/2"
+        >
+          Your fastest online grocery store
+        </div>
+      </div>
+      <div className="flex w-full p-10 justify-between">
         <div className="space-y-5 w-2/3">
           {
             Object.keys(groceries).map((category) => (
               <>
-                <div className="text-3xl font-bold">{category.toUpperCase()}</div>
+                <div className="text-2xl font-bold">{category.toUpperCase()}</div>
                 {getGroceryList(category)}
               </>
             ))
 
           }
         </div>
-        <div className="px-10 space-y-5 w-[30rem]">
-          <div className="sticky top-10 space-y-5 w-full">
-            <div className="text-3xl font-bold">All ready? checkout</div>
+        <div className="flex w-[35rem]">
+          <div className="sticky top-10 space-y-5 w-full px-10">
+            <div className="text-2xl font-bold">All ready? checkout</div>
             <Panel bordered className="overflow-auto h-[25rem]">
               <div className="font-bold text-2xl">Your shopping cart</div>
               <GroceryCart
                 products={itemsList}
                 onChange={updateQuantities}
-                onDelete={onDeleteItem}
+                onDelete={handleDeleteItems}
               />
             </Panel>
           </div>
