@@ -4,7 +4,7 @@ module.exports = {
   content: [
     "./app/**/*.{js,ts,jsx,tsx}",
     "./pages/**/*.{js,ts,jsx,tsx}",
-    "./components/**/*.{js,ts,jsx,tsx}",
+    "./components/**/*.{js,ts,jsx,tsx}"
   ],
   theme: {
     colors: {
@@ -17,7 +17,8 @@ module.exports = {
       red: colors.rose,
       yellow: colors.amber,
       blue: colors.blue,
-      green: colors.green
+      green: colors.green,
+      orange: colors.orange
     },
     fontFamily: {
       title: "var(--font-title)",

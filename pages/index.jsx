@@ -94,12 +94,12 @@ const GroceryPage = () => {
           Your fastest online grocery store
         </div>
       </div>
-      <div className="flex w-full p-10 justify-between">
+      <div className="flex w-full p-10 justify-between bg-orange-400">
         <div className="space-y-5 w-2/3">
           {
             Object.keys(groceries).map((category) => (
               <>
-                <div className="text-2xl font-bold">{category.toUpperCase()}</div>
+                <div className="text-2xl font-bold text-white">{category.toUpperCase()}</div>
                 {getGroceryList(category)}
               </>
             ))
@@ -108,9 +108,9 @@ const GroceryPage = () => {
         </div>
         <div className="flex w-[35rem]">
           <div className="sticky top-10 space-y-5 w-full px-10">
-            <div className="text-2xl font-bold">All ready? checkout</div>
-            <Panel bordered className="overflow-auto h-[25rem]">
-              <div className="font-bold text-2xl">Your shopping cart</div>
+            <div className="text-2xl font-bold text-white">All ready? checkout</div>
+            <Panel bordered className="overflow-auto h-[25rem] bg-white">
+              <div className="font-bold text-xl">Your shopping cart</div>
               {itemsList.length ? (
                 <GroceryCart
                   products={itemsList}
