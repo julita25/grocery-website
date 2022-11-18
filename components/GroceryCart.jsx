@@ -4,10 +4,11 @@ import { InputNumber } from "rsuite";
 import { WarningRound } from "@rsuite/icons";
 import ModalButton from "./ModalButton";
 
-const GroceryCart = ({ products, onChange, onDelete }) => {
+const GroceryCart = ({
+  products, onChange, onDelete, onConfirm
+}) => {
   const [quantities, setQuantities] = useState({ ...products });
   const [subTotal, setSubTotal] = useState(0);
-  const serviceFee = 2;
 
   useEffect(() => {
     const newSubtotal = products.map(
@@ -42,62 +43,64 @@ const GroceryCart = ({ products, onChange, onDelete }) => {
   const handleConfirmOrder = () => {
     setQuantities({});
     onDelete("All");
+    onConfirm();
   };
+
+  const serviceFee = 2;
+  const total = subTotal + serviceFee;
 
   return (
     <div className="space-y-10">
-      {products.length ? (
-        <div className="space-y-2 pt-5">
-          {products.map((item) => (
-            <div className="flex justify-between items-center">
-              <InputNumber
-                min={1}
-                value={quantities[item.id] || 1}
-                onChange={(val) => onChangeQuantity(val, item.id)}
-                className="w-14"
-              />
-              <div>{item.name}</div>
-              <div className="flex space-x-2 items-center">
-                <div>
-                  $
-                  {item.price}
-                </div>
-                <WarningRound className="text-red-500" onClick={() => handleDelete(item.id)} />
-              </div>
-            </div>
-          ))}
-        </div>
-      ) : <div>The products you add will appear here!</div>}
-      {Boolean(products.length) && (
-        <div className="space-y-4">
-          <div className="font-bold text-xl">Basket Summary</div>
-          <div className="flex flex-col">
-            <div className="flex justify-between">
-              <div>Subtotal</div>
+      <div className="space-y-2 pt-5">
+        {products.map((item) => (
+          <div className="flex justify-between items-center">
+            <InputNumber
+              min={1}
+              value={quantities[item.id] || 1}
+              onChange={(val) => onChangeQuantity(val, item.id)}
+              className="w-14"
+            />
+            <div>{item.name}</div>
+            <div className="flex space-x-2 items-center">
               <div>
                 $
-                {subTotal}
+                {item.price}
               </div>
-            </div>
-            <div className="flex justify-between">
-              <div>Service fee</div>
-              <div>
-                $
-                {serviceFee}
-              </div>
-            </div>
-            <div className="flex justify-between">
-              <div>Total</div>
-              <div>
-                $
-                {subTotal + serviceFee}
-              </div>
+              <WarningRound className="text-red-500" onClick={() => handleDelete(item.id)} />
             </div>
           </div>
-          <ModalButton onSubmit={handleConfirmOrder} />
-
+        ))}
+      </div>
+      <div className="space-y-4">
+        <div className="font-bold text-xl">Basket Summary</div>
+        <div className="flex flex-col">
+          <div className="flex justify-between">
+            <div>Subtotal</div>
+            <div>
+              $
+              {subTotal}
+            </div>
+          </div>
+          <div className="flex justify-between">
+            <div>Service fee</div>
+            <div>
+              $
+              {serviceFee}
+            </div>
+          </div>
+          <div className="flex justify-between">
+            <div>Total</div>
+            <div>
+              $
+              {total}
+            </div>
+          </div>
         </div>
-      )}
+        <ModalButton
+          onSubmit={handleConfirmOrder}
+          body={`Your order of $${total} is complete. Click on confirm to send your order request or cancel if you want to add more items`}
+        />
+      </div>
     </div>
 
   );
@@ -106,6 +109,7 @@ const GroceryCart = ({ products, onChange, onDelete }) => {
 GroceryCart.propTypes = {
   products: instanceOf(Array).isRequired,
   onChange: func.isRequired,
-  onDelete: func.isRequired
+  onDelete: func.isRequired,
+  onConfirm: func.isRequired
 };
 export default GroceryCart;

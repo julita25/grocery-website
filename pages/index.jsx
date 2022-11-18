@@ -1,11 +1,12 @@
 import React, { useState } from "react";
-import { Panel } from "rsuite";
+import { Loader, Panel } from "rsuite";
 import GroceryCart from "../components/GroceryCart";
 import GroceryItem from "../components/GroceryItem";
 import groceries from "../data/groceries";
 
 const GroceryPage = () => {
   const [itemsList, setItemsList] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const addGroceryItem = (item) => {
     const itemExists = itemsList.some((it) => it.id === item.id);
@@ -57,6 +58,15 @@ const GroceryPage = () => {
     }
   };
 
+  const onConfirm = () => {
+    setIsLoading(true);
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 1500);
+  };
+
+  if (isLoading) return <Loader center size="lg" />;
+
   const getGroceryList = (it) => (
     <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-5">
       {groceries[it].map((item) => (
@@ -101,11 +111,18 @@ const GroceryPage = () => {
             <div className="text-2xl font-bold">All ready? checkout</div>
             <Panel bordered className="overflow-auto h-[25rem]">
               <div className="font-bold text-2xl">Your shopping cart</div>
-              <GroceryCart
-                products={itemsList}
-                onChange={updateQuantities}
-                onDelete={handleDeleteItems}
-              />
+              {itemsList.length ? (
+                <GroceryCart
+                  products={itemsList}
+                  onChange={updateQuantities}
+                  onDelete={handleDeleteItems}
+                  onConfirm={onConfirm}
+                />
+              )
+                : (
+                  <div className="flex items-center">Your shopping items will appear here</div>
+                )}
+
             </Panel>
           </div>
         </div>

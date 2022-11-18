@@ -1,8 +1,8 @@
-import { func } from "prop-types";
+import { string, func } from "prop-types";
 import React, { useState } from "react";
 import { Button, Modal } from "rsuite";
 
-const ModalButton = ({ onSubmit }) => {
+const ModalButton = ({ onSubmit, body }) => {
   const [open, setOpen] = useState();
 
   const handleConfirm = () => {
@@ -25,8 +25,7 @@ const ModalButton = ({ onSubmit }) => {
           <Modal.Title>Order complete?</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          Order is ready! Click confirm to send your order request
-          or cancel if you want to add more items
+          {body}
         </Modal.Body>
         <Modal.Footer>
           <Button
@@ -52,7 +51,8 @@ const ModalButton = ({ onSubmit }) => {
 };
 
 ModalButton.propTypes = {
-  onSubmit: func.isRequired
+  onSubmit: func.isRequired,
+  body: string.isRequired
 };
 
 export default ModalButton;
