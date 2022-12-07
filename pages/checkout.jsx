@@ -1,8 +1,11 @@
 import React from "react";
+// import { useSelector } from "react-redux";
 import { FlexboxGrid, List, Panel } from "rsuite";
+// import { getCartItemsSelector } from "../store/selectors";
 
 const checkout = () => {
-  const headers = ["Items", "Quantity", "Price", "Toatk"];
+  const headers = ["Items", "Quantity", "Price", "Total"];
+  // const cartItems = useSelector(getCartItemsSelector);
   return (
     <div className="bg-gray-300 p-10 h-full">
       <h1>Order Summary</h1>
@@ -19,7 +22,7 @@ const checkout = () => {
               }
             </FlexboxGrid>
           </List.Item>
-          {data.map((item, index) => (
+          {/* cartItems.map((item, index) => (
             <List.Item key={item.title} index={index + 1}>
               <FlexboxGrid justify="space-between">
                 {
@@ -41,7 +44,7 @@ const checkout = () => {
                 }
               </FlexboxGrid>
             </List.Item>
-          ))}
+              )) */}
         </List>
       </Panel>
     </div>
