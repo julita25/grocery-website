@@ -1,10 +1,14 @@
 import React, { useState } from "react";
-import { Loader, Panel } from "rsuite";
+import { Loader } from "rsuite";
+import { useDispatch } from "react-redux";
 import GroceryCart from "../components/GroceryCart";
 import GroceryItem from "../components/GroceryItem";
 import groceries from "../data/groceries";
+import ShoppingCartButton from "../components/ShoppingCartButton";
+import { addCartItem, deleteCartItem } from "../store/actions";
 
 const GroceryPage = () => {
+  const dispatch = useDispatch();
   const [itemsList, setItemsList] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -31,22 +35,24 @@ const GroceryPage = () => {
       ];
     }
     setItemsList(updatedGroceryItems);
+    dispatch(addCartItem(updatedGroceryItems));
   };
 
   const updateQuantities = (qtys) => {
     const items = itemsList.map((item) => {
       if (item.id in qtys) {
-        const quantities = parseFloat(qtys[item.id]);
+        const updatedQuantity = parseFloat(qtys[item.id]);
         const updatedItem = {
           ...item,
-          quantity: quantities,
-          totalPrice: parseFloat(item.price) * quantities
+          quantity: updatedQuantity,
+          totalPrice: parseFloat(item.price) * updatedQuantity
         };
         return updatedItem;
       }
       return item;
     });
     setItemsList(items);
+    dispatch(addGroceryItem(items));
   };
 
   const handleDeleteItems = (del) => {
@@ -55,6 +61,7 @@ const GroceryPage = () => {
     } else {
       const updatedList = itemsList.filter((item) => item.id !== del);
       setItemsList(updatedList);
+      dispatch(deleteCartItem(updatedList));
     }
   };
 
@@ -75,6 +82,8 @@ const GroceryPage = () => {
     </div>
   );
 
+  const itemsCount = itemsList.reduce((prev, it) => it.quantity + prev, 0);
+
   return (
     <div className="flex flex-col justify-center items-center w-screen">
       <div className="w-full">
@@ -83,6 +92,26 @@ const GroceryPage = () => {
           src="https://static.blog.bolt.eu/LIVE/wp-content/uploads/2022/04/30135418/grocery-list.jpg"
           alt="food-bg"
         />
+        <div className="fixed top-5 right-5">
+          <ShoppingCartButton
+            itemsCount={itemsCount}
+            drawerBody={
+
+              itemsList.length ? (
+                <GroceryCart
+                  products={itemsList}
+                  onChange={updateQuantities}
+                  onDelete={handleDeleteItems}
+                  onConfirm={onConfirm}
+                />
+              )
+                : (
+                  <div className="flex items-center">Your shopping items will appear here</div>
+                )
+            }
+
+          />
+        </div>
         <div
           className="bg-white outline outline-2 text-5xl absolute top-1/4 left-2/4 text-black -translate-x-1/2 -translate-y-1/2"
         >
@@ -95,7 +124,7 @@ const GroceryPage = () => {
         </div>
       </div>
       <div className="flex w-full p-10 justify-between bg-orange-400">
-        <div className="space-y-5 w-2/3">
+        <div className="space-y-5">
           {
             Object.keys(groceries).map((category) => (
               <>
@@ -105,26 +134,6 @@ const GroceryPage = () => {
             ))
 
           }
-        </div>
-        <div className="flex w-[35rem]">
-          <div className="sticky top-10 space-y-5 w-full px-10">
-            <div className="text-2xl font-bold text-white">All ready? checkout</div>
-            <Panel bordered className="overflow-auto h-[25rem] bg-white">
-              <div className="font-bold text-xl">Your shopping cart</div>
-              {itemsList.length ? (
-                <GroceryCart
-                  products={itemsList}
-                  onChange={updateQuantities}
-                  onDelete={handleDeleteItems}
-                  onConfirm={onConfirm}
-                />
-              )
-                : (
-                  <div className="flex items-center">Your shopping items will appear here</div>
-                )}
-
-            </Panel>
-          </div>
         </div>
       </div>
     </div>
