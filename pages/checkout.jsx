@@ -1,11 +1,33 @@
 import React from "react";
-// import { useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { FlexboxGrid, List, Panel } from "rsuite";
-// import { getCartItemsSelector } from "../store/selectors";
+import CheckoutItem from "../components/CheckoutItem";
+import PriceFormatter from "../components/PriceFormatter";
+import { getCartItemsSelector } from "../store/selectors";
+
+export const headers = [{
+  key: "name",
+  label: "Items",
+  Component: CheckoutItem
+},
+{
+  key: "quantity",
+  label: "Quantity"
+}, {
+  key: "price",
+  label: "Price",
+  Component: PriceFormatter
+},
+{
+  key: "total",
+  label: "Total",
+  Component: (props) => <PriceFormatter isTotal {...props} />
+}
+];
 
 const checkout = () => {
-  const headers = ["Items", "Quantity", "Price", "Total"];
-  // const cartItems = useSelector(getCartItemsSelector);
+  const cartItems = useSelector(getCartItemsSelector);
+  console.log(cartItems);
   return (
     <div className="bg-gray-300 p-10 h-full">
       <h1>Order Summary</h1>
@@ -14,29 +36,29 @@ const checkout = () => {
           <List.Item key="headers">
             <FlexboxGrid justify="space-between">
               {
-                headers?.map((label) => (
+                headers?.map((item) => (
                   <FlexboxGrid.Item colspan={4} className="font-bold" align="middle">
-                    {label}
+                    {item.label}
                   </FlexboxGrid.Item>
                 ))
               }
             </FlexboxGrid>
           </List.Item>
-          {/* cartItems.map((item, index) => (
+          {cartItems.map((item, index) => (
             <List.Item key={item.title} index={index + 1}>
-              <FlexboxGrid justify="space-between">
+              <FlexboxGrid justify="space-between" align="middle">
                 {
                   headers?.map(({
-                    Component, colspan, key
+                    key, Component
                   }) => (
                     Component
                       ? (
-                        <FlexboxGrid.Item colspan={colspan || 4} align="middle">
+                        <FlexboxGrid.Item colspan={4} align="middle">
                           <Component rowData={item}>{item[key]}</Component>
                         </FlexboxGrid.Item>
                       )
                       : (
-                        <FlexboxGrid.Item colspan={colspan || 4} align="middle">
+                        <FlexboxGrid.Item colspan={4} align="middle">
                           {item[key]}
                         </FlexboxGrid.Item>
                       )
@@ -44,7 +66,7 @@ const checkout = () => {
                 }
               </FlexboxGrid>
             </List.Item>
-              )) */}
+          ))}
         </List>
       </Panel>
     </div>
