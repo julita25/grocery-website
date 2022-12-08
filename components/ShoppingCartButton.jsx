@@ -19,7 +19,7 @@ const ShoppingCartButton = ({ drawerBody, itemsCount }) => {
       </Button>
       <Drawer open={open} onClose={() => setOpen(false)} className="bg-gray-200">
         <Drawer.Header>
-          <Drawer.Title>Your shopping cart</Drawer.Title>
+          <Drawer.Title>Shopping cart</Drawer.Title>
           <Drawer.Actions>
             <Button
               onClick={() => setOpen(false)}
@@ -32,7 +32,20 @@ const ShoppingCartButton = ({ drawerBody, itemsCount }) => {
           </Drawer.Actions>
         </Drawer.Header>
         <Drawer.Body>
-          {drawerBody}
+          {
+            !itemsCount
+              ? (
+                <div className="w-full flex-col flex justify-center items-center mt-10">
+                  <img
+                    src="./images/empty-shopping-cart.jpg"
+                    alt="empty-cart"
+                    className="w-2/4"
+                  />
+                  <div>Ups your cart is empty</div>
+                </div>
+              )
+              : drawerBody
+          }
         </Drawer.Body>
       </Drawer>
     </>
