@@ -2,18 +2,18 @@ import { createReducer } from "@reduxjs/toolkit";
 import { addCartItem, deleteCartItem } from "./actions";
 
 const initialState = {
-  cartItems: [],
+  items: [],
   itemCount: 0
 };
 
-const storeItemsReducer = createReducer(initialState, (builder) => {
+const cartItemsReducer = createReducer(initialState, (builder) => {
   builder
     .addCase(addCartItem, (state, action) => {
-      state.cartItems = action.payload;
+      state.items = action.payload;
     })
     .addCase(deleteCartItem, (state, action) => {
-      state.cartItems = action.payload;
+      state.items = action.payload;
     });
 });
 
-export default storeItemsReducer;
+export default cartItemsReducer;
