@@ -8,7 +8,7 @@ import { getCartItemsSelector } from "../store/selectors";
 export const headers = [{
   key: "name",
   label: "Items",
-  Component: CheckoutItem
+  Component: (props) => <CheckoutItem {...props} />
 },
 {
   key: "quantity",
@@ -19,9 +19,9 @@ export const headers = [{
   Component: PriceFormatter
 },
 {
-  key: "total",
+  key: "totalPrice",
   label: "Total",
-  Component: (props) => <PriceFormatter isTotal {...props} />
+  Component: PriceFormatter
 }
 ];
 
