@@ -1,13 +1,10 @@
 import { instanceOf } from "prop-types";
 import React from "react";
-import { Provider } from "react-redux";
-import store from "../store";
+import { wrapper } from "../store";
 import "../styles/globals.css";
 
 const App = ({ Component, pageProps }) => (
-  <Provider store={store}>
-    <Component {...pageProps} />
-  </Provider>
+  <Component {...pageProps} />
 );
 
 App.propTypes = {
@@ -16,4 +13,4 @@ App.propTypes = {
 
 };
 
-export default App;
+export default wrapper.withRedux(App);
