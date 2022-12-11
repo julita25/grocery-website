@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { instanceOf, func } from "prop-types";
-import { InputNumber } from "rsuite";
+import { Button, InputNumber } from "rsuite";
 import { WarningRound } from "@rsuite/icons";
-import ModalButton from "./ModalButton";
+import { useRouter } from "next/router";
+import CheckoutItem from "./CheckoutItem";
 
 const GroceryCart = ({
-  products, onChange, onDelete, onConfirm
+  products, onChange, onDelete
 }) => {
+  const router = useRouter();
   const [quantities, setQuantities] = useState({ ...products });
   const [subTotal, setSubTotal] = useState(0);
 
@@ -40,28 +42,24 @@ const GroceryCart = ({
     onDelete(id);
   };
 
-  const handleConfirmOrder = () => {
-    setQuantities({});
-    onDelete("All");
-    onConfirm();
-  };
-
-  const serviceFee = 2;
+  const serviceFee = 5.00;
   const total = subTotal + serviceFee;
 
   return (
-    <div className="space-y-10">
+    <div className="space-y-10 w-full border-2 rounded bg-gray-100">
       <div className="space-y-2 pt-5">
         {products.map((item) => (
-          <div className="flex justify-between items-center">
-            <InputNumber
-              min={1}
-              value={quantities[item.id] || 1}
-              onChange={(val) => onChangeQuantity(val, item.id)}
-              className="w-14"
-            />
-            <div>{item.name}</div>
-            <div className="flex space-x-2 items-center">
+          <div className="flex items-center justify-around grid grid-cols-3 gap-6">
+            <CheckoutItem rowData={item}>{item.name}</CheckoutItem>
+            <div className="flex justify-center">
+              <InputNumber
+                min={1}
+                value={quantities[item.id] || 1}
+                onChange={(val) => onChangeQuantity(val, item.id)}
+                className="w-14"
+              />
+            </div>
+            <div className="flex justify-center space-x-2 items-center">
               <div>
                 $
                 {item.price}
@@ -71,7 +69,7 @@ const GroceryCart = ({
           </div>
         ))}
       </div>
-      <div className="space-y-4">
+      <div className="space-y-4 p-3">
         <div className="font-bold text-xl">Basket Summary</div>
         <div className="flex flex-col">
           <div className="flex justify-between">
@@ -96,10 +94,14 @@ const GroceryCart = ({
             </div>
           </div>
         </div>
-        <ModalButton
-          onSubmit={handleConfirmOrder}
-          body={`Your order of $${total} is complete. Click on confirm to send your order request or cancel if you want to add more items`}
-        />
+        <Button
+          className="bg-green-500"
+          color="green"
+          appearance="primary"
+          onClick={() => router.push("/checkout")}
+        >
+          Checkout
+        </Button>
       </div>
     </div>
 
@@ -109,7 +111,6 @@ const GroceryCart = ({
 GroceryCart.propTypes = {
   products: instanceOf(Array).isRequired,
   onChange: func.isRequired,
-  onDelete: func.isRequired,
-  onConfirm: func.isRequired
+  onDelete: func.isRequired
 };
 export default GroceryCart;
