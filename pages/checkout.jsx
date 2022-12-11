@@ -35,12 +35,11 @@ const checkout = () => {
   const serviceFee = 5;
   const total = (parseFloat(subTotal) + serviceFee).toFixed(2);
 
-  console.log(typeof subTotal);
   return (
-    <div className="p-10 h-full flex flex-col justify-center items-center space-y-20">
-      <h1 className="text-3xl">Order Summary</h1>
-      <Panel className="w-3/4 bg-gray-100">
-        <Panel header="Online Store" className="bg-white mb-8">
+    <div className="p-10 flex flex-col items-center justify-center space-y-20">
+      <h1 className="text-3xl font-bold">Order Summary</h1>
+      <Panel className="w-3/4 bg-orange-400">
+        <Panel header="Dubai Store" className="bg-white mb-8">
           <List className="bg-gray-100">
             <List.Item key="headers">
               <FlexboxGrid justify="space-between">

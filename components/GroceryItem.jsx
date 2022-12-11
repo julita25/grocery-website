@@ -4,7 +4,6 @@ import { Panel } from "rsuite";
 import { PlusRound } from "@rsuite/icons";
 
 const GroceryItem = ({ item, onChange }) => {
-  // const [itemsList, setItemsList] = useState();
   const {
     name, producer, price, img
   } = item;
@@ -20,29 +19,33 @@ const GroceryItem = ({ item, onChange }) => {
 
   return (
     <Panel bordered className="bg-white w-full h-[8rem]">
-      <div className="flex space-x-8">
-        <div className="flex w-3/4 space-x-2">
+      <div className="flex grid grid-cols-3 gap-5 items-center">
+        <div className="flex w-3/4 space-x-2 col-span-2">
           <div>
-            <img src={img} alt="food" className="w-24 h-16 object-cover" />
+            <img src={img} alt="food" className="w-20 h-16 object-contain" />
           </div>
-          <div>
-            {name}
-            <div className="flex">
-              <div className="mr-2">Country: </div>
+          <div className="flex flex-col">
+            <div>
+              {name}
+            </div>
+            <div>
+              Country:
               {producer}
             </div>
           </div>
         </div>
-        <div className="flex flex-col justify-between">
+        <div className="flex flex-col space-y-2 justify-end">
           <div className="flex justify-end">
             $
             {price}
           </div>
-          <PlusRound
-            onClick={() => handleAddGroceryItem(item)}
-            color="green"
-            className="w-10 h-5"
-          />
+          <div className="flex justify-end">
+            <PlusRound
+              onClick={() => handleAddGroceryItem(item)}
+              color="green"
+              className="w-5 h-5 hover:text-green-500"
+            />
+          </div>
         </div>
       </div>
     </Panel>
