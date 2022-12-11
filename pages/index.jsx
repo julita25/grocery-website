@@ -1,22 +1,23 @@
 import React, { useState } from "react";
 import { Loader } from "rsuite";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import GroceryCart from "../components/GroceryCart";
 import GroceryItem from "../components/GroceryItem";
 import groceries from "../data/groceries";
 import ShoppingCartButton from "../components/ShoppingCartButton";
 import { addCartItem, deleteCartItem } from "../store/actions";
+import { getCartItemsSelector } from "../store/selectors";
 
 const GroceryPage = () => {
   const dispatch = useDispatch();
-  const [itemsList, setItemsList] = useState([]);
+  const cartItems = useSelector(getCartItemsSelector);
   const [isLoading, setIsLoading] = useState(false);
 
   const addGroceryItem = (item) => {
-    const itemExists = itemsList.some((it) => it.id === item.id);
+    const itemExists = cartItems.some((it) => it.id === item.id);
     let updatedGroceryItems = [];
     if (itemExists) {
-      updatedGroceryItems = itemsList.map((it) => {
+      updatedGroceryItems = cartItems.map((it) => {
         if (it.id === item.id) {
           const newQty = it.quantity + 1;
           const obj = {
@@ -30,16 +31,15 @@ const GroceryPage = () => {
       });
     } else {
       updatedGroceryItems = [
-        ...itemsList,
+        ...cartItems,
         item
       ];
     }
-    setItemsList(updatedGroceryItems);
     dispatch(addCartItem(updatedGroceryItems));
   };
 
   const updateQuantities = (qtys) => {
-    const items = itemsList.map((item) => {
+    const items = cartItems.map((item) => {
       if (item.id in qtys) {
         const updatedQuantity = parseFloat(qtys[item.id]);
         const updatedItem = {
@@ -51,18 +51,13 @@ const GroceryPage = () => {
       }
       return item;
     });
-    setItemsList(items);
-    dispatch(addGroceryItem(items));
+
+    dispatch(addCartItem(items));
   };
 
-  const handleDeleteItems = (del) => {
-    if (del === "All") {
-      setItemsList([]);
-    } else {
-      const updatedList = itemsList.filter((item) => item.id !== del);
-      setItemsList(updatedList);
-      dispatch(deleteCartItem(updatedList));
-    }
+  const handleDeleteItems = (id) => {
+    const updatedList = cartItems.filter((item) => item.id !== id);
+    dispatch(deleteCartItem(updatedList));
   };
 
   const onConfirm = () => {
@@ -82,7 +77,7 @@ const GroceryPage = () => {
     </div>
   );
 
-  const itemsCount = itemsList.reduce((prev, it) => it.quantity + prev, 0);
+  const itemsCount = cartItems.reduce((prev, it) => it.quantity + prev, 0);
 
   return (
     <div className="flex flex-col justify-center items-center w-screen">
@@ -95,30 +90,23 @@ const GroceryPage = () => {
         <div className="fixed top-5 right-5">
           <ShoppingCartButton
             itemsCount={itemsCount}
-            drawerBody={
-
-              itemsList.length ? (
-                <GroceryCart
-                  products={itemsList}
-                  onChange={updateQuantities}
-                  onDelete={handleDeleteItems}
-                  onConfirm={onConfirm}
-                />
-              )
-                : (
-                  <div className="flex items-center">Your shopping items will appear here</div>
-                )
-            }
-
+            drawerBody={(
+              <GroceryCart
+                products={cartItems}
+                onChange={updateQuantities}
+                onDelete={handleDeleteItems}
+                onConfirm={onConfirm}
+              />
+            )}
           />
         </div>
         <div
-          className="bg-white outline outline-2 text-5xl absolute top-1/4 left-2/4 text-black -translate-x-1/2 -translate-y-1/2"
+          className="bg-white p-2 outline outline-2 text-5xl absolute top-1/4 left-2/4 text-black -translate-x-1/2 -translate-y-1/2"
         >
-          Local grocery store
+          Dubai store
         </div>
         <div
-          className="bg-white outline outline-2 text-3xl text-black absolute top-1/3 left-2/4 -translate-x-1/2 -translate-y-1/2"
+          className="bg-white p-1 outline outline-2 text-3xl text-black absolute top-1/3 left-2/4 -translate-x-1/2 -translate-y-1/2"
         >
           Your fastest online grocery store
         </div>
