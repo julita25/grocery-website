@@ -83,7 +83,7 @@ const GroceryCart = ({
             <div>Service fee</div>
             <div>
               $
-              {serviceFee}
+              {serviceFee.toFixed(2)}
             </div>
           </div>
           <div className="flex justify-between">
